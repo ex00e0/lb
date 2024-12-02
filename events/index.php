@@ -60,7 +60,28 @@ $con = mysqli_connect("localhost","root","", "lb");
         
     </tbody>
     </table>
+    <div>Всего посещений</div>
     <svg id="chart_x" width="700" height="700" style="margin-left:50px; margin-bottom:50px;"></svg>
+    <div>Посещений за последнюю неделю</div>
+    <svg id="chart_x2" width="700" height="700" style="margin-left:50px; margin-bottom:50px;"></svg>
+    <div>Посещений за последний месяц</div>
+    <svg id="chart_x3" width="700" height="700" style="margin-left:50px; margin-bottom:50px;"></svg>
+    <div>Посещений за последний год</div>
+    <svg id="chart_x4" width="700" height="700" style="margin-left:50px; margin-bottom:50px;"></svg>
+<?php 
+   $date_year = date_create();
+   date_modify($date_year, "-1 year"); 
+   $date_year = date_format($date_year, "Y-m-d");
+   
+   $date_month = date_create();
+   date_modify($date_month, "-1 month"); 
+   $date_month = date_format($date_month, "Y-m-d");
+
+   $date_week = date_create();
+   date_modify($date_week, "-1 week"); 
+   $date_week = date_format($date_week, "Y-m-d");
+   ?>
+   
 <script>
 let events_all = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from events"));
                        echo json_encode($sm);?>;
@@ -131,6 +152,228 @@ function createAttendanceChart() {
 
 document.addEventListener("DOMContentLoaded", () => {
     createAttendanceChart();
+});
+
+
+</script>
+<script>
+let events_all2 = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from events where date >= '$date_week'"));
+                       echo json_encode($sm);?>;
+let events_arr2 = [];
+  events_all2.forEach((value) => {
+     let obj = {
+        name: value[1],
+        type: value[2],
+        date: value[3],
+        people: value[4]
+     }
+     events_arr2.push(obj);
+    });
+    console.log(events_arr2);
+// const events = [
+//     { name: "Лекция по программированию", type: "лекция", attendees: 50 },
+//     { name: "Семинар по дизайну", type: "семинар", attendees: 30 },
+//     { name: "Конференция по маркетингу", type: "конференция", attendees: 100 },
+//     { name: "Лекция по математике", type: "лекция", attendees: 45 },
+//     { name: "Семинар по искусству", type: "семинар", attendees: 25 },
+// ];
+
+function createAttendanceChart2() {
+    const marginTop = 20;
+  const marginRight = 20;
+  const marginBottom = 20;
+  const marginLeft = 40;
+    const svg = d3.select("#chart_x2");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+
+    const x = d3.scaleBand()
+        .domain(events_arr2.map(event => event.name))
+        .range([0, width])
+        .padding(0.1);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(events_arr2, d => d.people)])
+        .range([height, 0]);
+
+    svg.selectAll("rect")
+        .data(events_arr2)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.name))
+        .attr("y", d => y(d.people))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.people))
+        .attr("fill", "steelblue");
+        
+
+        svg.append("g")
+      .attr("transform", `translate(0,${height - marginBottom})`)
+      .call(d3.axisBottom(x));
+
+  // Add the y-axis.
+  svg.append("g")
+      .attr("transform", `translate(${marginLeft},0)`)
+      .call(d3.axisLeft(y));
+
+}
+
+// function filterEvents() {
+//     const selectedType = document.getElementById("eventType").value;
+//     const filteredEvents = selectedType ? events.filter(event => event.type === selectedType) : events;
+//     renderEventTable(filteredEvents);
+// }
+
+document.addEventListener("DOMContentLoaded", () => {
+    createAttendanceChart2();
+});
+
+
+</script>
+<script>
+let events_all3 = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from events where date >= '$date_month'"));
+                       echo json_encode($sm);?>;
+let events_arr3 = [];
+  events_all3.forEach((value) => {
+     let obj = {
+        name: value[1],
+        type: value[2],
+        date: value[3],
+        people: value[4]
+     }
+     events_arr3.push(obj);
+    });
+    console.log(events_arr3);
+// const events = [
+//     { name: "Лекция по программированию", type: "лекция", attendees: 50 },
+//     { name: "Семинар по дизайну", type: "семинар", attendees: 30 },
+//     { name: "Конференция по маркетингу", type: "конференция", attendees: 100 },
+//     { name: "Лекция по математике", type: "лекция", attendees: 45 },
+//     { name: "Семинар по искусству", type: "семинар", attendees: 25 },
+// ];
+
+function createAttendanceChart3() {
+    const marginTop = 20;
+  const marginRight = 20;
+  const marginBottom = 20;
+  const marginLeft = 40;
+    const svg = d3.select("#chart_x3");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+
+    const x = d3.scaleBand()
+        .domain(events_arr3.map(event => event.name))
+        .range([0, width])
+        .padding(0.1);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(events_arr3, d => d.people)])
+        .range([height, 0]);
+
+    svg.selectAll("rect")
+        .data(events_arr3)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.name))
+        .attr("y", d => y(d.people))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.people))
+        .attr("fill", "steelblue");
+        
+
+        svg.append("g")
+      .attr("transform", `translate(0,${height - marginBottom})`)
+      .call(d3.axisBottom(x));
+
+  // Add the y-axis.
+  svg.append("g")
+      .attr("transform", `translate(${marginLeft},0)`)
+      .call(d3.axisLeft(y));
+
+}
+
+// function filterEvents() {
+//     const selectedType = document.getElementById("eventType").value;
+//     const filteredEvents = selectedType ? events.filter(event => event.type === selectedType) : events;
+//     renderEventTable(filteredEvents);
+// }
+
+document.addEventListener("DOMContentLoaded", () => {
+    createAttendanceChart3();
+});
+
+
+</script>
+<script>
+let events_all4 = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from events where date >= '$date_year'"));
+                       echo json_encode($sm);?>;
+let events_arr4 = [];
+  events_all4.forEach((value) => {
+     let obj = {
+        name: value[1],
+        type: value[2],
+        date: value[3],
+        people: value[4]
+     }
+     events_arr4.push(obj);
+    });
+    console.log(events_arr4);
+// const events = [
+//     { name: "Лекция по программированию", type: "лекция", attendees: 50 },
+//     { name: "Семинар по дизайну", type: "семинар", attendees: 30 },
+//     { name: "Конференция по маркетингу", type: "конференция", attendees: 100 },
+//     { name: "Лекция по математике", type: "лекция", attendees: 45 },
+//     { name: "Семинар по искусству", type: "семинар", attendees: 25 },
+// ];
+
+function createAttendanceChart4() {
+    const marginTop = 20;
+  const marginRight = 20;
+  const marginBottom = 20;
+  const marginLeft = 40;
+    const svg = d3.select("#chart_x4");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+
+    const x = d3.scaleBand()
+        .domain(events_arr4.map(event => event.name))
+        .range([0, width])
+        .padding(0.1);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(events_arr4, d => d.people)])
+        .range([height, 0]);
+
+    svg.selectAll("rect")
+        .data(events_arr4)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.name))
+        .attr("y", d => y(d.people))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.people))
+        .attr("fill", "steelblue");
+        
+
+        svg.append("g")
+      .attr("transform", `translate(0,${height - marginBottom})`)
+      .call(d3.axisBottom(x));
+
+  // Add the y-axis.
+  svg.append("g")
+      .attr("transform", `translate(${marginLeft},0)`)
+      .call(d3.axisLeft(y));
+
+}
+
+// function filterEvents() {
+//     const selectedType = document.getElementById("eventType").value;
+//     const filteredEvents = selectedType ? events.filter(event => event.type === selectedType) : events;
+//     renderEventTable(filteredEvents);
+// }
+
+document.addEventListener("DOMContentLoaded", () => {
+    createAttendanceChart4();
 });
 
 
