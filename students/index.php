@@ -1,6 +1,6 @@
 <?php
 $con = mysqli_connect("localhost","root","", "lb");
-// $sm = mysqli_fetch_all(mysqli_query($con, "select * from students"));
+// $sm_all = mysqli_fetch_all(mysqli_query($con, "select * from students"));
 $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
                                     WHEN average >= 4.5 THEN 1
                                     ELSE NULL
@@ -63,11 +63,14 @@ $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
     <div>
   <canvas id="myChart"></canvas>
 </div>
+<div>
+  <canvas id="myChart2"></canvas>
+</div>
     <script>
   const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: ['5', '4', '3', '2', '1'],
       datasets: [{
@@ -84,6 +87,34 @@ $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
       }
     }
   });
+
+  const ctx2 = document.getElementById('myChart2');
+let sm_all = <?php $sm_all = mysqli_fetch_all(mysqli_query($con, "select * from students"));
+                       echo json_encode($sm_all);?>;
+let labels_arr = [];
+let marks_arr = [];
+sm_all.forEach((value) => {
+    labels_arr.push(value[1]);
+    marks_arr.push(value[3]);
+})
+new Chart(ctx2, {
+  type: 'line',
+  data: {
+    labels: labels_arr,
+    datasets: [{
+      label: '- общее количество оценок',
+      data: marks_arr,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
 
   
 </script>
