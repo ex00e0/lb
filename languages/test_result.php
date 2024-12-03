@@ -1,7 +1,8 @@
 <?php
+$lang = $_POST['lang'];
 $con = mysqli_connect("localhost","root","", "lb");
 $today = date('Y-m-d');
-mysqli_query($con, "insert into tests_main (date) VALUES ('$today')");
+mysqli_query($con, "insert into tests_main (date) VALUES ('$today', '$lang')");
 $test_id = mysqli_insert_id($con);
 $count_correct = 0;
 for ($i=0; $i<5; $i++) {

@@ -24,6 +24,19 @@ else {
     <div class="container">
 <form action="test_result.php" method="post">
     <?php
+    if ($_GET['lang'] == 'en') {
+        ?>
+         <input type="hidden" value="английский" name="lang">
+        <?php
+    }
+    else {
+    ?>
+     <input type="hidden" value="французский" name="lang">
+    <?php
+    }
+    ?>
+   
+    <?php
     for ($i=0; $i<5; $i++) {
         $rand = rand(1,($count-1));
     ?>

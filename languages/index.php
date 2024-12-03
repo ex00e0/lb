@@ -219,7 +219,31 @@ from tests_main join tests on tests_main.id = tests.test_id join words on tests.
 <div class="container"><a href="test.php?lang=en">Перейти к тесту по английскому</a></div>
 <div class="container"><a href="test.php?lang=fr">Перейти к тесту по французскому</a></div>
 <div style="height:2vmax;"></div>
-
+<div class="container">
+<select class="form-select" aria-label="Default select example" style="width:25%" onchange="get_elems(this.value)">
+        <option value="">
+            все
+        </option>
+        <option value="английский">английский</option>
+        <option value="французский">французский</option>
+    </select>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Дата теста</th>
+        <th scope="col">Язык</th>
+        <th scope="col">Правильных ответов</th>
+        <th scope="col">Неправильных ответов</th>
+        </tr>
+    </thead>
+    <tbody id="fill">
+      
+        
+        
+    </tbody>
+    </table>
+</div>
 <figure class="highcharts-figure">
     <div id="container"></div>
     <p class="highcharts-description">
@@ -234,8 +258,124 @@ from tests_main join tests on tests_main.id = tests.test_id join words on tests.
     </p>
 </figure>
 
+
 <script>
-    // Data retrieved https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature
+    function get_elems (filter) {
+        let sm;
+    if (filter != null && filter != '') {
+     
+        if (filter == "английский") {
+            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select tests_main.*, (count(CASE
+WHEN tests.is_correct = 'true' THEN 1
+ELSE NULL
+END)), (count(CASE
+WHEN tests.is_correct = 'false' THEN 1
+ELSE NULL
+END)) from tests_main join tests on tests_main.id = tests.test_id join words on tests.word_id=words.id group by tests_main.id having tests_main.language = 'английский'"));
+                       echo json_encode($sm);?>
+        }
+        else if (filter == "французский") {
+            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select tests_main.*, (count(CASE
+WHEN tests.is_correct = 'true' THEN 1
+ELSE NULL
+END)), (count(CASE
+WHEN tests.is_correct = 'false' THEN 1
+ELSE NULL
+END)) from tests_main join tests on tests_main.id = tests.test_id join words on tests.word_id=words.id group by tests_main.id having tests_main.language = 'французский'")); 
+            echo json_encode($sm);?>
+        }
+    }
+    else {
+        sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select tests_main.*, (count(CASE
+WHEN tests.is_correct = 'true' THEN 1
+ELSE NULL
+END)), (count(CASE
+WHEN tests.is_correct = 'false' THEN 1
+ELSE NULL
+END)) from tests_main join tests on tests_main.id = tests.test_id join words on tests.word_id=words.id group by tests_main.id"));
+                       echo json_encode($sm);?>
+        
+    }
+    document.getElementById('fill').innerHTML = '';
+        sm.forEach((value) => {
+
+            // console.log(value[0]);
+            let div = document.createElement('tr');
+            html = `
+            <th scope="row">${value[0]}</th>
+                <td>${value[1]}</td>
+                <td>${value[2]}</td>
+                <td>${value[3]}</td>
+                <td>${value[4]}</td>
+            `;
+            div.innerHTML = html;
+            document.getElementById('fill').append(div);
+            
+        })
+ let series;
+ if (filter != null && filter != '') {
+ if (filter == "английский") {
+    series = [{
+        name: 'Английский',
+        data: [
+            <?=$counts_false['january']?>,<?=$counts_false['february']?>,<?=$counts_false['march']?>,<?=$counts_false['april']?>,<?=$counts_false['may']?>,<?=$counts_false['june']?>,<?=$counts_false['july']?>,<?=$counts_false['august']?>,<?=$counts_false['september']?>,<?=$counts_false['october']?>,<?=$counts_false['november']?>,<?=$counts_false['december']?>
+        ]
+    }]
+ }
+ else if (filter == "французский") {
+    series = [{
+        name: 'Французский',
+        data: [
+            <?=$counts_fr_false['january']?>,<?=$counts_fr_false['february']?>,<?=$counts_fr_false['march']?>,<?=$counts_fr_false['april']?>,<?=$counts_fr_false['may']?>,<?=$counts_fr_false['june']?>,<?=$counts_fr_false['july']?>,<?=$counts_fr_false['august']?>,<?=$counts_fr_false['september']?>,<?=$counts_fr_false['october']?>,<?=$counts_fr_false['november']?>,<?=$counts_fr_false['december']?>
+        ]
+    }]
+ }
+}
+else {
+    series = [{
+        name: 'Английский',
+        data: [
+            <?=$counts_false['january']?>,<?=$counts_false['february']?>,<?=$counts_false['march']?>,<?=$counts_false['april']?>,<?=$counts_false['may']?>,<?=$counts_false['june']?>,<?=$counts_false['july']?>,<?=$counts_false['august']?>,<?=$counts_false['september']?>,<?=$counts_false['october']?>,<?=$counts_false['november']?>,<?=$counts_false['december']?>
+        ]
+    }, {
+        name: 'Французский',
+        data: [
+            <?=$counts_fr_false['january']?>,<?=$counts_fr_false['february']?>,<?=$counts_fr_false['march']?>,<?=$counts_fr_false['april']?>,<?=$counts_fr_false['may']?>,<?=$counts_fr_false['june']?>,<?=$counts_fr_false['july']?>,<?=$counts_fr_false['august']?>,<?=$counts_fr_false['september']?>,<?=$counts_fr_false['october']?>,<?=$counts_fr_false['november']?>,<?=$counts_fr_false['december']?>
+        ]
+    }]
+}
+let series2;
+ if (filter != null && filter != '') {
+ if (filter == "английский") {
+    series2 = [{
+        name: 'Английский',
+        data: [
+            <?=$counts['january']?>,<?=$counts['february']?>,<?=$counts['march']?>,<?=$counts['april']?>,<?=$counts['may']?>,<?=$counts['june']?>,<?=$counts['july']?>,<?=$counts['august']?>,<?=$counts['september']?>,<?=$counts['october']?>,<?=$counts['november']?>,<?=$counts['december']?>
+        ]
+    }]
+ }
+ else if (filter == "французский") {
+    series2 = [{
+        name: 'Французский',
+        data: [
+            <?=$counts_fr['january']?>,<?=$counts_fr['february']?>,<?=$counts_fr['march']?>,<?=$counts_fr['april']?>,<?=$counts_fr['may']?>,<?=$counts_fr['june']?>,<?=$counts_fr['july']?>,<?=$counts_fr['august']?>,<?=$counts_fr['september']?>,<?=$counts_fr['october']?>,<?=$counts_fr['november']?>,<?=$counts_fr['december']?>
+        ]
+    }]
+ }
+}
+else {
+    series2 = [{
+        name: 'Английский',
+        data: [
+            <?=$counts['january']?>,<?=$counts['february']?>,<?=$counts['march']?>,<?=$counts['april']?>,<?=$counts['may']?>,<?=$counts['june']?>,<?=$counts['july']?>,<?=$counts['august']?>,<?=$counts['september']?>,<?=$counts['october']?>,<?=$counts['november']?>,<?=$counts['december']?>
+        ]
+    }, {
+        name: 'Французский',
+        data: [
+            <?=$counts_fr['january']?>,<?=$counts_fr['february']?>,<?=$counts_fr['march']?>,<?=$counts_fr['april']?>,<?=$counts_fr['may']?>,<?=$counts_fr['june']?>,<?=$counts_fr['july']?>,<?=$counts_fr['august']?>,<?=$counts_fr['september']?>,<?=$counts_fr['october']?>,<?=$counts_fr['november']?>,<?=$counts_fr['december']?>
+        ]
+    }]
+}
 Highcharts.chart('container', {
     chart: {
         type: 'line'
@@ -265,20 +405,9 @@ Highcharts.chart('container', {
             enableMouseTracking: false
         }
     },
-    series: [{
-        name: 'Английский',
-        data: [
-            <?=$counts['january']?>,<?=$counts['february']?>,<?=$counts['march']?>,<?=$counts['april']?>,<?=$counts['may']?>,<?=$counts['june']?>,<?=$counts['july']?>,<?=$counts['august']?>,<?=$counts['september']?>,<?=$counts['october']?>,<?=$counts['november']?>,<?=$counts['december']?>
-        ]
-    }, {
-        name: 'Французский',
-        data: [
-            <?=$counts_fr['january']?>,<?=$counts_fr['february']?>,<?=$counts_fr['march']?>,<?=$counts_fr['april']?>,<?=$counts_fr['may']?>,<?=$counts_fr['june']?>,<?=$counts_fr['july']?>,<?=$counts_fr['august']?>,<?=$counts_fr['september']?>,<?=$counts_fr['october']?>,<?=$counts_fr['november']?>,<?=$counts_fr['december']?>
-        ]
-    }]
+    series: series2
 });
-
-Highcharts.chart('container2', {
+        Highcharts.chart('container2', {
     chart: {
         type: 'line'
     },
@@ -309,20 +438,15 @@ Highcharts.chart('container2', {
             enableMouseTracking: false
         }
     },
-    series: [{
-        name: 'Английский',
-        data: [
-            <?=$counts_false['january']?>,<?=$counts_false['february']?>,<?=$counts_false['march']?>,<?=$counts_false['april']?>,<?=$counts_false['may']?>,<?=$counts_false['june']?>,<?=$counts_false['july']?>,<?=$counts_false['august']?>,<?=$counts_false['september']?>,<?=$counts_false['october']?>,<?=$counts_false['november']?>,<?=$counts_false['december']?>
-        ]
-    }, {
-        name: 'Французский',
-        data: [
-            <?=$counts_fr_false['january']?>,<?=$counts_fr_false['february']?>,<?=$counts_fr_false['march']?>,<?=$counts_fr_false['april']?>,<?=$counts_fr_false['may']?>,<?=$counts_fr_false['june']?>,<?=$counts_fr_false['july']?>,<?=$counts_fr_false['august']?>,<?=$counts_fr_false['september']?>,<?=$counts_fr_false['october']?>,<?=$counts_fr_false['november']?>,<?=$counts_fr_false['december']?>
-        ]
-    }]
+    series: series
 });
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    get_elems(null);
+    });
 
-</script>
+  </script>
+
 </body>
 </html>
 
