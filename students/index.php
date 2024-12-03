@@ -67,26 +67,7 @@ $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
   <canvas id="myChart2"></canvas>
 </div>
     <script>
-  const ctx = document.getElementById('myChart');
 
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['5', '4', '3', '2', '1'],
-      datasets: [{
-        label: '- количество студентов с данным средним баллом',
-        data: [<?=$counts["5"]?>, <?=$counts["4"]?>, <?=$counts["3"]?>, <?=$counts["2"]?>, <?=$counts["1"]?>],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
 
   const ctx2 = document.getElementById('myChart2');
 let sm_all = <?php $sm_all = mysqli_fetch_all(mysqli_query($con, "select * from students"));
@@ -165,6 +146,8 @@ new Chart(ctx2, {
             document.getElementById('fill').append(div);
             
         })
+
+        
   }
   document.addEventListener("DOMContentLoaded", () => {
     get_elems(null);
