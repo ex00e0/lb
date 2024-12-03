@@ -98,6 +98,106 @@ WHEN tests_main.date <= '2024-01-31' AND tests_main.date >= '2024-01-01' AND tes
 ELSE NULL
 END)) as 'january'
 from tests_main join tests on tests_main.id = tests.test_id join words on tests.word_id = words.id"));
+
+
+$counts_false = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
+WHEN tests_main.date <= '2024-12-31' AND tests_main.date >= '2024-12-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'december', 
+(count(CASE
+WHEN tests_main.date <= '2024-11-30' AND tests_main.date >= '2024-11-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'november',
+(count(CASE
+WHEN tests_main.date <= '2024-10-31' AND tests_main.date >= '2024-10-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'october', 
+(count(CASE
+WHEN tests_main.date <= '2024-09-30' AND tests_main.date >= '2024-09-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'september', 
+(count(CASE
+WHEN tests_main.date <= '2024-08-31' AND tests_main.date >= '2024-08-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'august', 
+(count(CASE
+WHEN tests_main.date <= '2024-07-31' AND tests_main.date >= '2024-07-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'july', 
+(count(CASE
+WHEN tests_main.date <= '2024-06-30' AND tests_main.date >= '2024-06-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'june', 
+(count(CASE
+WHEN tests_main.date <= '2024-05-31' AND tests_main.date >= '2024-05-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'may', 
+(count(CASE
+WHEN tests_main.date <= '2024-05-31' AND tests_main.date >= '2024-04-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'april', 
+(count(CASE
+WHEN tests_main.date <= '2024-03-31' AND tests_main.date >= '2024-03-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'march', 
+(count(CASE
+WHEN tests_main.date <= '2024-02-29' AND tests_main.date >= '2024-02-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'february', 
+(count(CASE
+WHEN tests_main.date <= '2024-01-31' AND tests_main.date >= '2024-01-01' AND tests.is_correct = 'false' AND words.language = 'английский' THEN 1
+ELSE NULL
+END)) as 'january'
+from tests_main join tests on tests_main.id = tests.test_id join words on tests.word_id = words.id"));
+$counts_fr_false = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
+WHEN tests_main.date <= '2024-12-31' AND tests_main.date >= '2024-12-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'december', 
+(count(CASE
+WHEN tests_main.date <= '2024-11-30' AND tests_main.date >= '2024-11-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'november',
+(count(CASE
+WHEN tests_main.date <= '2024-10-31' AND tests_main.date >= '2024-10-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'october', 
+(count(CASE
+WHEN tests_main.date <= '2024-09-30' AND tests_main.date >= '2024-09-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'september', 
+(count(CASE
+WHEN tests_main.date <= '2024-08-31' AND tests_main.date >= '2024-08-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'august', 
+(count(CASE
+WHEN tests_main.date <= '2024-07-31' AND tests_main.date >= '2024-07-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'july', 
+(count(CASE
+WHEN tests_main.date <= '2024-06-30' AND tests_main.date >= '2024-06-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'june', 
+(count(CASE
+WHEN tests_main.date <= '2024-05-31' AND tests_main.date >= '2024-05-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'may', 
+(count(CASE
+WHEN tests_main.date <= '2024-05-31' AND tests_main.date >= '2024-04-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'april', 
+(count(CASE
+WHEN tests_main.date <= '2024-03-31' AND tests_main.date >= '2024-03-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'march', 
+(count(CASE
+WHEN tests_main.date <= '2024-02-29' AND tests_main.date >= '2024-02-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'february', 
+(count(CASE
+WHEN tests_main.date <= '2024-01-31' AND tests_main.date >= '2024-01-01' AND tests.is_correct = 'false' AND words.language = 'французский' THEN 1
+ELSE NULL
+END)) as 'january'
+from tests_main join tests on tests_main.id = tests.test_id join words on tests.word_id = words.id"));
 ?>
 
 <!DOCTYPE html>
@@ -127,6 +227,13 @@ from tests_main join tests on tests_main.id = tests.test_id join words on tests.
     </p>
 </figure>
 
+<figure class="highcharts-figure">
+    <div id="container2"></div>
+    <p class="highcharts-description">
+       
+    </p>
+</figure>
+
 <script>
     // Data retrieved https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature
 Highcharts.chart('container', {
@@ -136,11 +243,9 @@ Highcharts.chart('container', {
     title: {
         text: 'Прогресс изучения слов за год'
     },
-    // subtitle: {
-    //     text: 'Source: ' +
-    //         '<a href="https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature" ' +
-    //         'target="_blank">Wikipedia.com</a>'
-    // },
+    subtitle: {
+        text: 'правильные ответы'
+    },
     xAxis: {
         categories: [
             'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
@@ -169,6 +274,50 @@ Highcharts.chart('container', {
         name: 'Французский',
         data: [
             <?=$counts_fr['january']?>,<?=$counts_fr['february']?>,<?=$counts_fr['march']?>,<?=$counts_fr['april']?>,<?=$counts_fr['may']?>,<?=$counts_fr['june']?>,<?=$counts_fr['july']?>,<?=$counts_fr['august']?>,<?=$counts_fr['september']?>,<?=$counts_fr['october']?>,<?=$counts_fr['november']?>,<?=$counts_fr['december']?>
+        ]
+    }]
+});
+
+Highcharts.chart('container2', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Статистика неправильных ответов за год'
+    },
+    // subtitle: {
+    //     text: 'Source: ' +
+    //         '<a href="https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature" ' +
+    //         'target="_blank">Wikipedia.com</a>'
+    // },
+    xAxis: {
+        categories: [
+            'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+            'Октябрь', 'Ноябрь', 'Декабрь'
+        ]
+    },
+    yAxis: {
+        title: {
+            text: 'Количество слов'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Английский',
+        data: [
+            <?=$counts_false['january']?>,<?=$counts_false['february']?>,<?=$counts_false['march']?>,<?=$counts_false['april']?>,<?=$counts_false['may']?>,<?=$counts_false['june']?>,<?=$counts_false['july']?>,<?=$counts_false['august']?>,<?=$counts_false['september']?>,<?=$counts_false['october']?>,<?=$counts_false['november']?>,<?=$counts_false['december']?>
+        ]
+    }, {
+        name: 'Французский',
+        data: [
+            <?=$counts_fr_false['january']?>,<?=$counts_fr_false['february']?>,<?=$counts_fr_false['march']?>,<?=$counts_fr_false['april']?>,<?=$counts_fr_false['may']?>,<?=$counts_fr_false['june']?>,<?=$counts_fr_false['july']?>,<?=$counts_fr_false['august']?>,<?=$counts_fr_false['september']?>,<?=$counts_fr_false['october']?>,<?=$counts_fr_false['november']?>,<?=$counts_fr_false['december']?>
         ]
     }]
 });
