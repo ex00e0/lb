@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 03 2024 г., 11:27
+-- Время создания: Дек 04 2024 г., 08:48
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -50,28 +50,58 @@ INSERT INTO `events` (`id`, `name`, `type`, `date`, `people`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `marks`
+--
+
+CREATE TABLE `marks` (
+  `id` int NOT NULL,
+  `student_id` int NOT NULL,
+  `mark` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `marks`
+--
+
+INSERT INTO `marks` (`id`, `student_id`, `mark`) VALUES
+(1, 1, 2),
+(2, 1, 5),
+(3, 4, 2),
+(4, 1, 5),
+(5, 6, 2),
+(6, 3, 4),
+(7, 7, 5),
+(8, 7, 4),
+(9, 1, 5),
+(10, 1, 5),
+(11, 1, 5),
+(12, 1, 5),
+(13, 1, 4),
+(14, 2, 5);
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `students`
 --
 
 CREATE TABLE `students` (
   `id` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `average` decimal(8,2) NOT NULL,
-  `marks` int NOT NULL
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Дамп данных таблицы `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `average`, `marks`) VALUES
-(1, 'Марина', '4.30', 8),
-(2, 'София', '4.80', 15),
-(3, 'Карина', '4.15', 8),
-(4, 'Василий', '3.00', 18),
-(5, 'Арсений', '2.60', 5),
-(6, 'Яна', '2.10', 3),
-(7, 'Иван', '4.19', 9);
+INSERT INTO `students` (`id`, `name`) VALUES
+(1, 'Марина'),
+(2, 'София'),
+(3, 'Карина'),
+(4, 'Василий'),
+(5, 'Арсений'),
+(6, 'Яна'),
+(7, 'Иван');
 
 -- --------------------------------------------------------
 
@@ -363,6 +393,13 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `marks`
+--
+ALTER TABLE `marks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_id` (`student_id`);
+
+--
 -- Индексы таблицы `students`
 --
 ALTER TABLE `students`
@@ -399,6 +436,12 @@ ALTER TABLE `events`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT для таблицы `marks`
+--
+ALTER TABLE `marks`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT для таблицы `students`
 --
 ALTER TABLE `students`
@@ -425,6 +468,12 @@ ALTER TABLE `words`
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `marks`
+--
+ALTER TABLE `marks`
+  ADD CONSTRAINT `marks_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `tests`

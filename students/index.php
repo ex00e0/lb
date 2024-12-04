@@ -1,26 +1,25 @@
 <?php
 $con = mysqli_connect("localhost","root","", "lb");
-// $sm_all = mysqli_fetch_all(mysqli_query($con, "select * from students"));
-$counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
-                                    WHEN average >= 4.5 THEN 1
-                                    ELSE NULL
-                                END)) as '5', 
-                                (count(CASE
-                                    WHEN average < 4.5 AND average >= 3.5 THEN 1
-                                    ELSE NULL
-                                END)) as '4',
-                                (count(CASE
-                                    WHEN average < 3.5 AND average >= 2.5 THEN 1
-                                    ELSE NULL
-                                END)) as '3',
-                                (count(CASE
-                                    WHEN average < 2.5 AND average >= 1.5 THEN 1
-                                    ELSE NULL
-                                END)) as '2',
-                                (count(CASE
-                                    WHEN average < 1.5 THEN 1
-                                    ELSE NULL
-                                END)) as '1' from students"));
+// $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
+//                                     WHEN (sum(marks.mark)/count(marks.id)) >= 4.5 THEN 1
+//                                     ELSE NULL
+//                                 END)) as '5', 
+//                                 (count(CASE
+//                                     WHEN (sum(marks.mark)/count(marks.id)) < 4.5 AND (sum(marks.mark)/count(marks.id)) >= 3.5 THEN 1
+//                                     ELSE NULL
+//                                 END)) as '4',
+//                                 (count(CASE
+//                                     WHEN (sum(marks.mark)/count(marks.id)) < 3.5 AND (sum(marks.mark)/count(marks.id)) >= 2.5 THEN 1
+//                                     ELSE NULL
+//                                 END)) as '3',
+//                                 (count(CASE
+//                                     WHEN (sum(marks.mark)/count(marks.id)) < 2.5 AND (sum(marks.mark)/count(marks.id)) >= 1.5 THEN 1
+//                                     ELSE NULL
+//                                 END)) as '2',
+//                                 (count(CASE
+//                                     WHEN (sum(marks.mark)/count(marks.id)) < 1.5 THEN 1
+//                                     ELSE NULL
+//                                 END)) as '1' from students join marks on students.id = marks.student_id group by students.id order by students.id"));
 
 ?>
 
@@ -68,14 +67,37 @@ $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
 </div>
     <script>
   const ctx = document.getElementById('myChart');
-
+  let count_5 = 0;
+  let count_4 = 0;
+  let count_3 = 0;
+  let count_2 = 0;
+  let count_1 = 0;
+  let count_all = <?php $sm_all = mysqli_fetch_all(mysqli_query($con, "select students.*, sum(marks.mark), count(marks.id) from students join marks on students.id = marks.student_id group by students.id"));
+                       echo json_encode($sm_all);?>;
+  count_all.forEach((value) => {
+    if (value[2]/value[3] >= 4.5) {
+      count_5++;
+    }
+    else if (value[2]/value[3] < 4.5 && value[2]/value[3] >= 3.5) {
+      count_4++;
+    }
+    else if (value[2]/value[3] < 3.5 && value[2]/value[3] >= 2.5) {
+      count_3++;
+    }
+    else if (value[2]/value[3] < 2.5 && value[2]/value[3] >= 1.5) {
+      count_2++;
+    }
+    else if (value[2]/value[3] < 1.5) {
+      count_1++;
+    }
+})
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: ['5', '4', '3', '2', '1'],
       datasets: [{
         label: '- количество студентов с данным средним баллом',
-        data: [<?=$counts["5"]?>, <?=$counts["4"]?>, <?=$counts["3"]?>, <?=$counts["2"]?>, <?=$counts["1"]?>],
+        data: [count_5, count_4, count_3, count_2, count_1],
         borderWidth: 1
       }]
     },
@@ -89,13 +111,13 @@ $counts = mysqli_fetch_assoc(mysqli_query($con, "select (count(CASE
   });
 
   const ctx2 = document.getElementById('myChart2');
-let sm_all = <?php $sm_all = mysqli_fetch_all(mysqli_query($con, "select * from students"));
+let sm_all = <?php $sm_all = mysqli_fetch_all(mysqli_query($con, "select students.*, count(marks.id) from students join marks on students.id = marks.student_id group by students.id"));
                        echo json_encode($sm_all);?>;
 let labels_arr = [];
 let marks_arr = [];
 sm_all.forEach((value) => {
     labels_arr.push(value[1]);
-    marks_arr.push(value[3]);
+    marks_arr.push(value[2]);
 })
 new Chart(ctx2, {
   type: 'line',
@@ -120,51 +142,112 @@ new Chart(ctx2, {
 </script>
 <script>
     function get_elems (filter) {
+     
         let sm;
+        sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select students.*, sum(marks.mark), count(marks.id) from students join marks on students.id = marks.student_id group by students.id order by students.id"));
+                       echo json_encode($sm);?> 
+      document.getElementById('fill').innerHTML = '';
     if (filter != null && filter != '') {
      
+      sm.forEach((value) => {
+         
         if (filter == "5") {
-            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from students where average >= 4.5"));
-                       echo json_encode($sm);?>
-        }
-        else if (filter == "4") {
-            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from students where average < 4.5 AND average >= 3.5")); 
-            echo json_encode($sm);?>
-        }
-        else if (filter == "3") {
-            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from students where average < 3.5 AND average >= 2.5"));
-            echo json_encode($sm);?>
-        }
-        else if (filter == "2") {
-            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from students where average < 2.5 AND average >= 1.5"));
-            echo json_encode($sm);?>
-        }
-        else if (filter == "1") {
-            sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from students where average < 1.5")); 
-            echo json_encode($sm);?>
-        }
+      if (value[2]/value[3] >= 4.5) {
+         let div = document.createElement('tr');
+          html = `
+          <th scope="row">${value[0]}</th>
+              <td>${value[1]}</td>
+              <td>${value[2]/value[3]}</td>
+              <td>${value[3]}</td>
+          `;
+          div.innerHTML = html;
+          document.getElementById('fill').append(div);
+      }
+      // console.log(value[0]);
+     
+              }
+              if (filter == "4") {
+      if (value[2]/value[3] < 4.5 && value[2]/value[3] >= 3.5) {
+         let div = document.createElement('tr');
+          html = `
+          <th scope="row">${value[0]}</th>
+              <td>${value[1]}</td>
+              <td>${value[2]/value[3]}</td>
+              <td>${value[3]}</td>
+          `;
+          div.innerHTML = html;
+          document.getElementById('fill').append(div);
+      }
+      // console.log(value[0]);
+     
+              }
+              if (filter == "3") {
+      if (value[2]/value[3] < 3.5 && value[2]/value[3] >= 2.5) {
+         let div = document.createElement('tr');
+          html = `
+          <th scope="row">${value[0]}</th>
+              <td>${value[1]}</td>
+              <td>${value[2]/value[3]}</td>
+              <td>${value[3]}</td>
+          `;
+          div.innerHTML = html;
+          document.getElementById('fill').append(div);
+      }
+      // console.log(value[0]);
+     
+              }
+              if (filter == "2") {
+      if (value[2]/value[3] < 2.5 && value[2]/value[3] >= 1.5) {
+         let div = document.createElement('tr');
+          html = `
+          <th scope="row">${value[0]}</th>
+              <td>${value[1]}</td>
+              <td>${value[2]/value[3]}</td>
+              <td>${value[3]}</td>
+          `;
+          div.innerHTML = html;
+          document.getElementById('fill').append(div);
+      }
+      // console.log(value[0]);
+     
+              }
+              if (filter == "1") {
+      if (value[2]/value[3] < 1.5 ) {
+         let div = document.createElement('tr');
+          html = `
+          <th scope="row">${value[0]}</th>
+              <td>${value[1]}</td>
+              <td>${value[2]/value[3]}</td>
+              <td>${value[3]}</td>
+          `;
+          div.innerHTML = html;
+          document.getElementById('fill').append(div);
+      }
+      // console.log(value[0]);
+     
+              }
+})
        
     }
     else {
-        sm = <?php $sm = mysqli_fetch_all(mysqli_query($con, "select * from students"));
-                       echo json_encode($sm);?>
+      sm.forEach((value) => {
+
+// console.log(value[0]);
+let div = document.createElement('tr');
+html = `
+<th scope="row">${value[0]}</th>
+    <td>${value[1]}</td>
+    <td>${value[2]/value[3]}</td>
+    <td>${value[3]}</td>
+`;
+div.innerHTML = html;
+document.getElementById('fill').append(div);
+
+})
         
     }
-    document.getElementById('fill').innerHTML = '';
-        sm.forEach((value) => {
-
-            // console.log(value[0]);
-            let div = document.createElement('tr');
-            html = `
-            <th scope="row">${value[0]}</th>
-                <td>${value[1]}</td>
-                <td>${value[2]}</td>
-                <td>${value[3]}</td>
-            `;
-            div.innerHTML = html;
-            document.getElementById('fill').append(div);
-            
-        })
+   
+       
   }
   document.addEventListener("DOMContentLoaded", () => {
     get_elems(null);
